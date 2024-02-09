@@ -2,7 +2,6 @@
 // 02/08/2024
 // Series of functions to help sort a file by the nth word
 
-#include "readfile.h"
 #include "colsort.h"
 
 // Function to interpret cli arguments into filepath and nth word args
