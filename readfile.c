@@ -271,12 +271,16 @@ int main(int argc, char** argv) {
 	else if(argc > 2 && argc < 4) {
 		printf("Includes nth char\n");
 		if (argv[1][0] == '-') {
-				printf("First arg is nt\n");
-				filePath = argv[1];
-			} else {
-				printf("Second arg is nth\n");
-				filePath = argv[2];
-			}
+			printf("First arg is nthWord\n");
+			filePath = argv[2];
+			sscanf(argv[1] + 1, "%d", &nthWord);
+			printf("nth word index = %d\n", nthWord);
+		} else {
+			printf("Second arg is nth\n");
+			filePath = argv[1];
+			sscanf(argv[2] + 1, "%d", &nthWord);
+			printf("nth word index = %d\n", nthWord);
+		}
 	}
 	else {
 		printf("Doesn't include the nth char\n");
