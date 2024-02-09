@@ -73,6 +73,17 @@ int main(int argc, char** argv) {
 	// Assign file path and nth word
 	getSortArgs(argc, argv, &nthWord, filePath);
 
+	// Check file length to ensure it is <= 50 characters
+	if(strlen(filePath) > 50) {
+		errorFilePathTooLong((int) strlen(filePath));
+	}
+
+	struct stat statObj;
+
+	if(stat(filePath, &statObj) < 0) {
+		errorFilePathInvalid(filePath);
+	}
+
 	File file = getFileSortedByNthWord(filePath, nthWord);
 
 	printFile(&file);
