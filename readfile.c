@@ -84,6 +84,8 @@ int countWords(char* lineText) {
 		word = strtok(NULL, delim);
    	}
 
+   	free(text);
+
 	return count;
 }
 // Pop last character
@@ -95,6 +97,8 @@ char* popCharFromString(char* string, int length) {
 
 	char* rtnString = (char*) calloc((length - 1), sizeof(char*));
 	strcpy(rtnString, newString);
+
+	free(newString);
 
 	return rtnString;
 }
@@ -145,6 +149,8 @@ Line readInLine(char* lineText) {
 	words[length - 1] = removeNextLine(&words[length - 1]);
 
 	Line newLine = createLine(words, length);
+
+	free(text);
 
 	return newLine;
 }
@@ -239,6 +245,18 @@ int compareLines(const void * a, const void * b) {
 	return strcmp(line1.nthWord, line2.nthWord);
 }
 
+// Function to free a file object and all of it's components
+void freeFile(File file) {
+	for(int i = 0; i < file.length; i++) {
+		for(int j = 0; j < file.lines[i].words[j].length; j++) {
+			free(file.lines[i].words[j].text);
+		}
+		free(file.lines[i].words);
+		free(file.lines[i].nthWord);
+	}
+	free(file.lines);
+}
+
 int main(int argc, char** argv) {
 	// Variable to store the nth word to sort by
 	int nthWord = 1;
@@ -267,7 +285,8 @@ int main(int argc, char** argv) {
 
 	printf("File path = %s\n", filePath);
 
-	FILE* file = fopen(filePath, "r");
+	FILE* file = (FILE*) malloc(sizeof(FILE*));
+	file = fopen(filePath, "r");
 
 	File file1 = readInFile(file);
 
@@ -281,6 +300,8 @@ int main(int argc, char** argv) {
 	printFile(&file1);
 
 	fclose(file);
+
+	freeFile(file1);
 
 	return 0;
 }
