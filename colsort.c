@@ -19,11 +19,15 @@ void getSortArgs(int argc, char** argv, int* destNthWord, char* filePath) {
 		int output = -1;
 		if (argv[1][0] == '-') {
 			strcpy(filePath, argv[2]);
-			sscanf(argv[1] + 1, "%d", destNthWord);
+			output = sscanf(argv[1] + 1, "%d", destNthWord);
 		} else {
 			strcpy(filePath, argv[1]);
-			sscanf(argv[2] + 1, "%d", destNthWord);
+			output = sscanf(argv[2] + 1, "%d", destNthWord);
 		}
+		if(output < 1) {
+			errorInvalidNthWord();
+		}
+
 	}
 	else {
 		strcpy(filePath, argv[1]);
