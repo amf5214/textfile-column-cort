@@ -13,9 +13,10 @@
 void getSortArgs(int argc, char** argv, int* destNthWord, char* filePath) {
 	// Control flow to assign values to filePath and nthWord
 	if(argc < 2) {
-		printf("Not enough arguements provided\n");
+		errorNotEnoughArguements();
 	} 
 	else if(argc > 2 && argc < 4) {
+		int output = -1;
 		if (argv[1][0] == '-') {
 			strcpy(filePath, argv[2]);
 			sscanf(argv[1] + 1, "%d", destNthWord);
