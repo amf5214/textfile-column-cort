@@ -23,7 +23,10 @@ Word createWord(char* initText) {
 // initLength:int length of the array
 // Returns: Line type object
 Line createLine(Word* initWords, int initLength) {
-	Line newLine = {initWords, initLength};
+	char* emptyStr = "";
+	char* innerText = (char*) malloc(sizeof(char*) * initLength);
+	strcpy(innerText, emptyStr);
+	Line newLine = {initWords, initLength, innerText};
 	return newLine;
 }
 
@@ -43,16 +46,21 @@ File createFile(Line* initLines, int initLength) {
 void printLine(Line* line) {
 	for(int i = 0; i < line->length; i++) {
 		printf("%s ", line->words[i].text);
-
 	}
 	printf("\n");
 }
 
+// Function to print out a File object
+// Iterates through the lines array and prints out one at a time using printLine function
+// Params: file:File* Line pointer used to access the line properties
 void printFile(File* file) {
 	int length = file->length;
+
+	printf("\n");
 	for(int i = 0; i < length; i++) {
 		printLine(&file->lines[i]);
 	}
+	printf("\n");
 }
 
 // Function to count the number of words in a line
@@ -77,7 +85,32 @@ int countWords(char* lineText) {
    	}
 
 	return count;
+}
+// Pop last character
+char* popCharFromString(char* string, int length) {
+	char* newString = (char*) calloc((length - 1), sizeof(char*));
+	for(int i = 0; i < (length - 1); i++) {
+		newString[i] = string[i];
+	}
 
+	char* rtnString = (char*) calloc((length - 1), sizeof(char*));
+	strcpy(rtnString, newString);
+
+	return rtnString;
+}
+
+// Function to remove the next line character from the end of a word
+// Params: word:Word word to check and remove from
+Word removeNextLine(Word* word) {
+	if(word->text[word->length-1] == '\n') {
+
+		Word rtnWord = createWord(popCharFromString(word->text, word->length));
+
+		return rtnWord;
+	}
+	else {
+		return *word;
+	}
 }
 
 // Function to read in a line and store it into a Line object
@@ -109,11 +142,16 @@ Line readInLine(char* lineText) {
 		count += 1;
 	}
 
+	words[length - 1] = removeNextLine(&words[length - 1]);
+
 	Line newLine = createLine(words, length);
 
 	return newLine;
 }
 
+// Function to count the number of lines in a file
+// Params: file:FILE* FILE object pointer from std io library storing a stream of data
+// Returns: int representing the number of lines in the file
 int countFileLines(FILE* file) {
 	int count = 0;
 
@@ -125,7 +163,7 @@ int countFileLines(FILE* file) {
 
                 fgets(line, 128, file);
 
-		if(strlen(line) > 0 && line[strlen(line)-1]  == '\n') {
+		if(strlen(line) > 0 && line[0] != '\n') {
 			count += 1;
 		}
 
@@ -137,6 +175,9 @@ int countFileLines(FILE* file) {
 	return count;
 }
 
+// Function to read in a file from a std io library FILE object 
+// Params: file:FILE* FILE object pointer from std io library storing a stream of data
+// Returns: File struct containing an array of Line objects and a length value
 File readInFile(FILE* file) {
 	char* emptyStr = "";
 
@@ -151,7 +192,7 @@ File readInFile(FILE* file) {
 
                 fgets(line, 128, file);
 
-                if(strlen(line) > 0 && line[strlen(line)-1]  == '\n') {
+                if(strlen(line) > 0 && line[0] != '\n') {
                 	Line newLine = readInLine(line);
 			lines[count] = newLine;
 			count += 1;
@@ -166,25 +207,77 @@ File readInFile(FILE* file) {
 	return returnFile;
 }
 
+// Function to assign the nthword attribute of a Line object
+// Params: line:Line* line to be updated, nthWord:int index of the nthWord
+void assignNthWord(Line* line, int nthWord) {
+	if(line->length >= nthWord) {
+		Word wordObj = line->words[nthWord - 1];
+		line->nthWord = (char*) malloc(sizeof(char*) * wordObj.length);
+		strcpy(line->nthWord, wordObj.text);
+	} else if (line->length < nthWord && line->length > 0) {
+		Word wordObj = line->words[line->length - 1];
+		line->nthWord = (char*) malloc(sizeof(char*) * wordObj.length);
+		strcpy(line->nthWord, wordObj.text);
+	}
+}
 
-int main() {
-	// Word word1 = createWord("Hello");
-	// printf("word1 = %s\n", word1.text);
+// Function to assign the nthword attribute of all Line objects in a File object
+// Params: file:File* file to be updated, nthWord:int index of the nthWord
+void assignNthWords(File* file, int nthWord) {
+	for(int i = 0; i < file->length; i++) {
+		assignNthWord(&file->lines[i], nthWord);
+	}
+}
 
-	// char* line1 = "this is a test line";
-	// char* testLine = (char*) malloc(sizeof(char*) * 128);
-	// strcpy(testLine, line1);
+// Function to compare lines
+int compareLines(const void * a, const void * b) {
 
-	// Line output = readInLine(testLine);
+	Line line1 = *(Line*) a;
+	Line line2 = *(Line*) b;
 
-	// printf("Length of testLine is %d\n", output.length);
 
-	// printLine(&output);
+	return strcmp(line1.nthWord, line2.nthWord);
+}
 
-	FILE* file = fopen("testfile.txt", "r");
+int main(int argc, char** argv) {
+	// Variable to store the nth word to sort by
+	int nthWord = 1;
+
+	// Variable to store the file path
+	char* filePath = NULL;
+
+	// Control flow to assign values to filePath and nthWord
+	if(argc < 2) {
+		printf("Not enough arguements provided\n");
+	} 
+	else if(argc > 2 && argc < 4) {
+		printf("Includes nth char\n");
+		if (argv[1][0] == '-') {
+				printf("First arg is nt\n");
+				filePath = argv[1];
+			} else {
+				printf("Second arg is nth\n");
+				filePath = argv[2];
+			}
+	}
+	else {
+		printf("Doesn't include the nth char\n");
+		filePath = argv[1];
+	}
+
+	printf("File path = %s\n", filePath);
+
+	FILE* file = fopen(filePath, "r");
 
 	File file1 = readInFile(file);
 
+
+	assignNthWords(&file1, nthWord);
+
+	printFile(&file1);
+
+	qsort(file1.lines, file1.length, sizeof(Line), compareLines);
+	
 	printFile(&file1);
 
 	fclose(file);

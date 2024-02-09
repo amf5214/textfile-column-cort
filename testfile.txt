@@ -1,4 +1,5 @@
-this is a test file
-this is line 2
-this is line 3
-this is line 4
+but this line is second
+finally there is this line
+
+this line is first
+check case of empty line in the middle
