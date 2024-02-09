@@ -1,3 +1,7 @@
+// Written by Austin Fraley
+// 02/07/2024
+// Series of types and functions to assist in handling files
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

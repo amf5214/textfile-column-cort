@@ -2,7 +2,6 @@
 // 02/07/2024
 // Series of types and functions to assist in handling files
 
-
 #include "readfile.h"
 
 // Function to create a Word object
@@ -262,57 +261,4 @@ void freeFile(File file) {
 		free(file.lines[i].nthWord);
 	}
 	free(file.lines);
-}
-
-int main(int argc, char** argv) {
-	// Variable to store the nth word to sort by
-	int nthWord = 1;
-
-	// Variable to store the file path
-	char* filePath = NULL;
-
-	// Control flow to assign values to filePath and nthWord
-	if(argc < 2) {
-		printf("Not enough arguements provided\n");
-	} 
-	else if(argc > 2 && argc < 4) {
-		printf("Includes nth char\n");
-		if (argv[1][0] == '-') {
-			printf("First arg is nthWord\n");
-			filePath = argv[2];
-			sscanf(argv[1] + 1, "%d", &nthWord);
-			printf("nth word index = %d\n", nthWord);
-		} else {
-			printf("Second arg is nth\n");
-			filePath = argv[1];
-			sscanf(argv[2] + 1, "%d", &nthWord);
-			printf("nth word index = %d\n", nthWord);
-		}
-	}
-	else {
-		printf("Doesn't include the nth char\n");
-		filePath = argv[1];
-	}
-
-	printf("File path = %s\n", filePath);
-
-	FILE* file = (FILE*) malloc(sizeof(FILE*));
-	file = fopen(filePath, "r");
-
-	File file1 = readInFile(file);
-
-
-	assignNthWords(&file1, nthWord);
-
-	printFile(&file1);
-
-	qsort(file1.lines, file1.length, sizeof(Line), compareLines);
-	
-	printFile(&file1);
-
-	fclose(file);
-
-	freeFile(file1);
-
-	return 0;
 }
