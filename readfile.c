@@ -130,6 +130,9 @@ Word removeNextLine(Word* word) {
 // Returns: Line object representing the line but is much more interactive
 Line readInLine(char* lineText) {
 	const char* delim = " ";
+	if(strlen(lineText) > MAX_LINE_SIZE) {
+		errorLineIsTooLong(strlen(lineText));	
+	}
 
 	int length = countWords(lineText);
 
