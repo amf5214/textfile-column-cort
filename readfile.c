@@ -2,6 +2,8 @@
 // 02/07/2024
 // Series of types and functions to assist in handling files
 
+# define MAX_LINE_SIZE 128
+
 #include "readfile.h"
 
 // Function to create a Word object
@@ -166,10 +168,10 @@ int countFileLines(FILE* file) {
 	char* emptyStr = "";
 
 	while(!feof(file)) {
-		char* line = (char*) malloc(sizeof(char*) * 128);
+		char* line = (char*) malloc(sizeof(char*) * MAX_LINE_SIZE);
 		strcpy(line, emptyStr);
 
-                fgets(line, 128, file);
+                fgets(line, MAX_LINE_SIZE, file);
 
 		if(strlen(line) > 0 && line[0] != '\n') {
 			count += 1;
@@ -195,10 +197,10 @@ File readInFile(FILE* file) {
 	int count = 0;
 
         while(!feof(file)) {
-                char* line = (char*) malloc(sizeof(char*) * 128);
+                char* line = (char*) malloc(sizeof(char*) * MAX_LINE_SIZE);
                 strcpy(line, emptyStr);
 
-                fgets(line, 128, file);
+                fgets(line, MAX_LINE_SIZE, file);
 
                 if(strlen(line) > 0 && line[0] != '\n') {
                 	Line newLine = readInLine(line);

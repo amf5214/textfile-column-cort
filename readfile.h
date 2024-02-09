@@ -2,6 +2,9 @@
 // 02/07/2024
 // Series of types and functions to assist in handling files
 
+#ifndef READFILE_H
+#define READFILE_H
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -100,3 +103,6 @@ int compareLines(const void * a, const void * b);
 // Function to free a file object and all of it's components
 // Params: file:File is the file object to be freed
 void freeFile(File file);
+
+#endif 
+

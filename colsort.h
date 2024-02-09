@@ -2,6 +2,9 @@
 // 02/08/2024
 // Series of functions to help sort a file by the nth word
 
+#ifndef COLSORT_H
+#define COLSORT_H
+
 // Function to interpret cli arguments into filepath and nth word args
 // Params: argc:int is the number of command line arguements present
 // argv:char** is an array of strings provided by the cli
@@ -20,3 +23,5 @@ File sortFileByNthWord(File* file, int nthWord);
 // Params: filePath:char* representing a string with the file path, nthWord:int representing the nthWord index
 // Returns: File representing the sorted file
 File getFileSortedByNthWord(char* filePath, int nthWord);
+
+#endif 
