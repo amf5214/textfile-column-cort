@@ -88,7 +88,9 @@ int countWords(char* lineText) {
 
 	return count;
 }
-// Pop last character
+// Function to pop last character from a string/char*
+// Params: string:char* represents the string to pop from, length:int is the length of the string
+// Returns: char* is the pointer to the new string
 char* popCharFromString(char* string, int length) {
 	char* newString = (char*) calloc((length - 1), sizeof(char*));
 	for(int i = 0; i < (length - 1); i++) {
@@ -105,6 +107,7 @@ char* popCharFromString(char* string, int length) {
 
 // Function to remove the next line character from the end of a word
 // Params: word:Word word to check and remove from
+// Returns: Word is the new word object where the \n has been removed 
 Word removeNextLine(Word* word) {
 	if(word->text[word->length-1] == '\n') {
 
@@ -235,7 +238,10 @@ void assignNthWords(File* file, int nthWord) {
 	}
 }
 
-// Function to compare lines
+// Function to compare lines of a file
+// Created with the prototype required by qsort function
+// Params: a:const void* is a void pointer to line 1, b:const void* is a void pointer to line 2
+// Returns: int representing whether the nth word is equal to, comes before or after
 int compareLines(const void * a, const void * b) {
 
 	Line line1 = *(Line*) a;
@@ -246,6 +252,7 @@ int compareLines(const void * a, const void * b) {
 }
 
 // Function to free a file object and all of it's components
+// Params: file:File is the file object to be freed
 void freeFile(File file) {
 	for(int i = 0; i < file.length; i++) {
 		for(int j = 0; j < file.lines[i].words[j].length; j++) {
