@@ -5,6 +5,10 @@
 #ifndef COLSORT_H
 #define COLSORT_H
 
+#include <sys/stat.h>
+#include "readfile.h"
+#include "errorhandling.h"
+
 // Function to interpret cli arguments into filepath and nth word args
 // Params: argc:int is the number of command line arguements present
 // argv:char** is an array of strings provided by the cli
