@@ -8,19 +8,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "errorhandling.h"
 
-typedef struct Word{
+typedef struct Word {
 	char* text;
 	int length;
 } Word;
 
-typedef struct Line{
+typedef struct Line {
 	Word* words;
 	int length;
 	char* nthWord;
 } Line;
 
-typedef struct File{
+typedef struct File {
 	Line* lines;
 	int length;
 } File;
