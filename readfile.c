@@ -13,9 +13,10 @@
 // Returns: Word type struct
 Word createWord(char* initText) {
 	unsigned long length = strlen(initText);
-	char* innerText = (char*) malloc(sizeof(char*) * length);
-	strcpy(innerText, initText);
-	Word newWord = {innerText, (int)length};
+	Word newWord;
+	newWord.text = (char*) malloc(sizeof(char*) * length);
+	strcpy(newWord.text, initText);
+	newWord.length = (int)length;
 	return newWord;
 }
 
@@ -25,9 +26,11 @@ Word createWord(char* initText) {
 // Returns: Line type object
 Line createLine(Word* initWords, int initLength) {
 	char* emptyStr = "";
-	char* innerText = (char*) malloc(sizeof(char*) * initLength);
-	strcpy(innerText, emptyStr);
-	Line newLine = {initWords, initLength, innerText};
+	Line newLine;
+	newLine.nthWord = (char*) malloc(sizeof(char*) * initLength);
+	strcpy(newLine.nthWord, emptyStr);
+	newLine.length = initLength;
+	newLine.words = initWords;
 	return newLine;
 }
 
