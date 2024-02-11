@@ -14,7 +14,7 @@
 Word createWord(char* initText) {
 	unsigned long length = strlen(initText);
 	Word newWord;
-	newWord.text = (char*) malloc(sizeof(char*) * length);
+	newWord.text = (char*) malloc(sizeof(char*) * length + 1);
 	strcpy(newWord.text, initText);
 	newWord.length = (int)length;
 	return newWord;
@@ -25,12 +25,14 @@ Word createWord(char* initText) {
 // initLength:int length of the array
 // Returns: Line type object
 Line createLine(Word* initWords, int initLength) {
-	char* emptyStr = "";
 	Line newLine;
-	newLine.nthWord = (char*) malloc(sizeof(char*) * initLength);
-	strcpy(newLine.nthWord, emptyStr);
 	newLine.length = initLength;
 	newLine.words = initWords;
+	newLine.words = (Word*) malloc(sizeof(Word) * initLength);
+
+	for (int i = 0; i < initLength; i++) {
+		newLine.words[i] = initWords[i];
+	}
 	return newLine;
 }
 
@@ -92,35 +94,14 @@ int countWords(char* lineText) {
 
 	return count;
 }
-// Function to pop last character from a string/char*
-// Params: string:char* represents the string to pop from, length:int is the length of the string
-// Returns: char* is the pointer to the new string
-char* popCharFromString(char* string, int length) {
-	char* newString = (char*) calloc((length - 1), sizeof(char*));
-	for(int i = 0; i < (length - 1); i++) {
-		newString[i] = string[i];
-	}
-
-	char* rtnString = (char*) calloc((length - 1), sizeof(char*));
-	strcpy(rtnString, newString);
-
-	free(newString);
-
-	return rtnString;
-}
 
 // Function to remove the next line character from the end of a word
 // Params: word:Word word to check and remove from
 // Returns: Word is the new word object where the \n has been removed 
-Word removeNextLine(Word* word) {
+void removeNextLine(Word* word) {
 	if(word->text[word->length-1] == '\n') {
-
-		Word rtnWord = createWord(popCharFromString(word->text, word->length));
-
-		return rtnWord;
-	}
-	else {
-		return *word;
+		char* terminator = "\0";
+		strcpy(&word->text[word->length - 1], terminator);
 	}
 }
 
@@ -137,7 +118,7 @@ Line readInLine(char* lineText) {
 	int length = countWords(lineText);
 
 	// These two lines  duplicate the input string so that it is not modified
-	char* text = (char*) malloc(sizeof(char*) * strlen(lineText));
+	char* text = (char*) malloc(sizeof(char*) * strlen(lineText) + 1);
 	strcpy(text, lineText);
 
 	Word* words = (Word*) malloc(sizeof(Word) * length);
@@ -148,19 +129,19 @@ Line readInLine(char* lineText) {
 	word = strtok(text, delim);
 
 	while(word != NULL) {
-		Word newWord = createWord(word);
-
-		words[count] = newWord;
+		words[count] = createWord(word);
 		word = strtok(NULL, delim);
 
 		count += 1;
 	}
 
-	words[length - 1] = removeNextLine(&words[length - 1]);
+	removeNextLine(&words[length - 1]);
 
 	Line newLine = createLine(words, length);
 
 	free(text);
+
+	free(words);
 
 	return newLine;
 }
@@ -174,7 +155,7 @@ int countFileLines(FILE* file) {
 	char* emptyStr = "";
 
 	while(!feof(file)) {
-		char* line = (char*) malloc(sizeof(char*) * MAX_LINE_SIZE);
+		char* line = (char*) malloc(sizeof(char*) * MAX_LINE_SIZE + 1);
 		strcpy(line, emptyStr);
 
                 fgets(line, MAX_LINE_SIZE, file);
@@ -203,7 +184,7 @@ File readInFile(FILE* file) {
 	int count = 0;
 
         while(!feof(file)) {
-                char* line = (char*) malloc(sizeof(char*) * MAX_LINE_SIZE);
+                char* line = (char*) malloc(sizeof(char*) * MAX_LINE_SIZE + 1);
                 strcpy(line, emptyStr);
 
                 fgets(line, MAX_LINE_SIZE, file);
@@ -214,6 +195,7 @@ File readInFile(FILE* file) {
 			count += 1;
                 }
 
+                free(line);
         }
 
 	File returnFile = createFile(lines, numLines);
@@ -262,7 +244,7 @@ int compareLines(const void * a, const void * b) {
 // Params: file:File is the file object to be freed
 void freeFile(File file) {
 	for(int i = 0; i < file.length; i++) {
-		for(int j = 0; j < file.lines[i].words[j].length; j++) {
+		for(int j = 0; j < file.lines[i].length; j++) {
 			free(file.lines[i].words[j].text);
 		}
 		free(file.lines[i].words);

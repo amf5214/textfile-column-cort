@@ -1,5 +1,5 @@
 // Written by Austin Fraley
-// 02/08/2024
+// 02/09/2024
 // Series of functions to handle errors programatically
 
 #ifndef ERRORHANDLING_H

@@ -61,15 +61,10 @@ void printFile(File* file);
 // Returns: int representing the number of words present
 int countWords(char* lineText);
 
-// Function to pop last character from a string/char*
-// Params: string:char* represents the string to pop from, length:int is the length of the string
-// Returns: char* is the pointer to the new string
-char* popCharFromString(char* string, int length);
-
 // Function to remove the next line character from the end of a word
 // Params: word:Word word to check and remove from
 // Returns: Word is the new word object where the \n has been removed 
-Word removeNextLine(Word* word);
+void removeNextLine(Word* word);
 
 // Function to count the number of lines in a file
 // Params: file:FILE* FILE object pointer from std io library storing a stream of data

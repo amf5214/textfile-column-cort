@@ -49,8 +49,7 @@ File sortFileByNthWord(File* file, int nthWord) {
 // Params: filePath:char* representing a string with the file path, nthWord:int representing the nthWord index
 // Returns: File representing the sorted file
 File getFileSortedByNthWord(char* filePath, int nthWord) {
-	FILE* file = (FILE*) malloc(sizeof(FILE*));
-	file = fopen(filePath, "r");
+	FILE* file = fopen(filePath, "r");
 
 	File file1 = readInFile(file);
 	
@@ -77,16 +76,20 @@ int main(int argc, char** argv) {
 		errorFilePathTooLong((int) strlen(filePath));
 	}
 
+	// Creating struct to hold file information object
 	struct stat statObj;
 
 	if(stat(filePath, &statObj) < 0) {
 		errorFilePathInvalid(filePath);
 	}
 
+	// Getting sorted file object 
 	File file = getFileSortedByNthWord(filePath, nthWord);
 
+	// Printing out sorted file
 	printFile(&file);
 
+	// Free File object and all of its components
 	freeFile(file);
 	free(filePath);
 
